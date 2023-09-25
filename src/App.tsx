@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { MainLayout } from './layout';
+import { AccountDetailPage, AccountsListPage } from './pages';
+import accountsList from './mock-data/ta-accounts-response.json'
+
+export interface AccountDetail {
+  currency: string,
+  id: string,
+  identification: {
+    iban: string,
+    otherAccountNumber: string,
+  },
+  name: string,
+  product: string,
+  servicer: {
+    bankCode: string,
+    bic: string,
+    countryCode: string,
+  }
+};
+
+const AccountsListSlicer = (accountsList: AccountDetail[]): AccountDetail => {
+  return accountsList[0]
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <MainLayout>
+        <Routes>
+          <Route path='/' element={<AccountsListPage items={accountsList} />}></Route>
+          <Route path='/account-detail/:id' element={<AccountDetailPage {...AccountsListSlicer(accountsList)} />}></Route>
+        </Routes>
+      </MainLayout>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
